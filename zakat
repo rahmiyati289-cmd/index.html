@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Misi Zakat Fitrah: Hidup Lapang dengan Berbagi</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Plus Jakarta Sans & Amiri for Islamic vibe -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        },
+                        amber: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        },
+                        gold: '#F59E0B',
+                        islamic: {
+                            teal: '#0284c7',
+                            green: '#059669',
+                            gold: '#d97706',
+                            bg: '#f0fdf4'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        arabic: ['Amiri', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0f172a;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(217, 119, 6, 0.15) 0px, transparent 50%);
+            min-height: 100vh;
+            color: #1e293b;
+        }
+
+        /* Islamic Pattern Overlay Background */
+        .islamic-pattern-bg {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2059669' fill-opacity='0.04' fill-rule='evenodd'%3E%3Cpath d='M30 30L15 0h30L30 30zM0 30l30-15v30L0 30zm60 0L30 15v30l30-15zM30 30l15 30H15l15-30z'/%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .custom-card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Custom Bounce and Pulse Effects */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+        }
+
+        .animate-float {
+            animation: floatSlow 4s ease-in-out infinite;
+        }
+
+        /* Drag and Drop styling */
+        .draggable-item {
+            touch-action: none;
+            user-select: none;
+            cursor: grab;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .draggable-item:active {
+            cursor: grabbing;
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .drop-zone {
+            transition: all 0.2s ease;
+        }
+
+        .drop-zone.drag-over {
+            background-color: #d1fae5;
+            border-color: #10b981;
+            transform: scale(1.02);
+        }
+
+        /* Scale Meter animation */
+        .scale-needle {
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: bottom center;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #10b981;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen justify-between items-center p-3 sm:p-6 antialiased islamic-pattern-bg">
+
+    <!-- Sound Toggle Floating Button -->
+    <button id="soundToggleBtn" onclick="toggleAudio()" class="fixed top-4 right-4 z-50 bg-white/90 backdrop-blur border border-emerald-200 text-emerald-800 p-3 rounded-full shadow-lg hover:bg-emerald-50 transition transform hover:scale-105 flex items-center justify-center">
+        <i id="soundIcon" class="fas fa-volume-up text-lg text-emerald-600"></i>
+    </button>
+
+    <!-- Main Game Container -->
+    <div class="w-full max-w-4xl my-auto">
+        
+        <!-- Game Header / Navbar -->
+        <header class="custom-card rounded-2xl p-4 sm:p-5 mb-4 border-t-4 border-emerald-500 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3 text-center md:text-left">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center shadow-md font-arabic text-2xl font-bold">
+                    ☪
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-emerald-800 via-teal-700 to-emerald-600 bg-clip-text text-transparent">
+                        Misi Zakat Fitrah
+                    </h1>
+                    <p class="text-xs sm:text-sm text-slate-500 font-medium">PAI Kelas 5 Bab 4 • Hidup Lapang dengan Berbagi</p>
+                </div>
+            </div>
+
+            <!-- Score & Level Badge Container -->
+            <div class="flex items-center gap-3 w-full md:w-auto justify-center">
+                <!-- Level Indicator -->
+                <div class="bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl flex items-center gap-2">
+                    <i class="fas fa-layer-group text-emerald-600"></i>
+                    <span class="text-xs text-emerald-800 font-semibold uppercase tracking-wider">Babak</span>
+                    <span id="levelBadge" class="text-sm font-extrabold text-emerald-700">1/3</span>
+                </div>
+
+                <!-- Score Board -->
+                <div class="bg-amber-50 border border-amber-200 px-4 py-1.5 rounded-xl flex items-center gap-2">
+                    <i class="fas fa-star text-amber-500 animate-bounce"></i>
+                    <span class="text-xs text-amber-800 font-semibold uppercase tracking-wider">Skor</span>
+                    <span id="scoreText" class="text-lg font-extrabold text-amber-700">0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Progress Bar Indicator -->
+        <div class="w-full bg-slate-800/40 rounded-full h-2.5 mb-6 overflow-hidden p-0.5 border border-slate-700/50">
+            <div id="progressBar" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full transition-all duration-500 ease-out" style="width: 10%;"></div>
+        </div>
+
+        <!-- MAIN GAME CARD -->
+        <main id="gameCard" class="custom-card rounded-3xl p-5 sm:p-8 min-h-[480px] flex flex-col justify-between relative overflow-hidden transition-all duration-300">
+            <!-- Screen Content Rendered Dynamically Here -->
+        </main>
+
+        <!-- Footer Credits -->
+        <footer class="mt-6 text-center text-xs text-slate-400 font-medium">
+            Game Edukasi Interaktif PAI • Kurikulum Merdeka Sekolah Dasar
+        </footer>
+    </div>
+
+    <!-- AUDIO SYNTHESIS & REUSABLE GAME SCRIPT -->
+    <script>
+        /* ===================================================
+           1. AUDIO SYNTHESIZER (Web Audio API)
+           =================================================== */
+        class SoundEffects {
+            constructor() {
+                this.ctx = null;
+                this.muted = false;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+            }
+
+            playCorrect() {
+                if (this.muted) return;
+                this.init();
+                const now = this.ctx.currentTime;
+                
+                // Arpeggio note sequence (C5, E5, G5, C6)
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((freq, idx) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+                    
+                    gain.gain.setValueAtTime(0.2, now + idx * 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.25);
+                    
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    
+                    osc.start(now + idx * 0.08);
+                    osc.stop(now + idx * 0.08 + 0.25);
+                });
+            }
+
+            playWrong() {
+                if (this.muted) return;
+                this.init();
+                const now = this.ctx.currentTime;
+                
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(180, now);
+                osc.frequency.exponentialRampToValueAtTime(110, now + 0.3);
+                
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                
+                osc.start(now);
+                osc.stop(now + 0.3);
+            }
+
+            playClick() {
+                if (this.muted) return;
+                this.init();
+                const now = this.ctx.currentTime;
+                
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.exponentialRampToValueAtTime(200, now + 0.05);
+                
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                
+                osc.start(now);
+                osc.stop(now + 0.05);
+            }
+
+            playWin() {
+                if (this.muted) return;
+                this.init();
+                const now = this.ctx.currentTime;
+                const notes = [440, 554.37, 659.25, 880, 659.25, 880];
+                notes.forEach((freq, idx) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+                    
+                    gain.gain.setValueAtTime(0.25, now + idx * 0.12);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.4);
+                    
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    
+                    osc.start(now + idx * 0.12);
+                    osc.stop(now + idx * 0.12 + 0.4);
+                });
+            }
+        }
+
+        const sfx = new SoundEffects();
+
+        function toggleAudio() {
+            sfx.muted = !sfx.muted;
+            const icon = document.getElementById('soundIcon');
+            if (sfx.muted) {
+                icon.className = 'fas fa-volume-mute text-lg text-slate-400';
+            } else {
+                icon.className = 'fas fa-volume-up text-lg text-emerald-600';
+                sfx.playClick();
+            }
+        }
+
+        /* ===================================================
+           2. GAME STATE MANAGEMENT
+           =================================================== */
+        const gameState = {
+            score: 0,
+            currentRound: 0, // 0: Intro, 1: Quiz, 2: Rice Calc, 3: Asnaf Sorting, 4: Summary
+            
+            // Babak 1 State
+            quizIndex: 0,
+            
+            // Babak 2 State
+            riceSimulatedCount: 0,
+            currentFamily: null,
+            unitType: 'kg', // 'kg' or 'liter'
+            
+            // Babak 3 State
+            sortedAsnafCount: 0,
+            targetAsnafCount: 8
+        };
+
+        // Quiz Questions Data (Babak 1)
+        const quizData = [
+            {
+                question: "Apa arti kata \"Fitrah\" dalam istilah Zakat Fitrah?",
+                options: [
+                    "Harta berlimpah dan kaya raya",
+                    "Bersih dan suci",
+                    "Makanan pokok yang mahal",
+                    "Sedekah secara sukarela"
+                ],
+                correct: 1,
+                explanation: "Kata 'Fitrah' berasal dari kata 'fithrah' yang berarti bersih dan suci. Zakat fitrah berfungsi membersihkan diri dan menyucikan jiwa."
+            },
+            {
+                question: "Bagaimanakah hukum mengeluarkan Zakat Fitrah bagi muslim yang mampu?",
+                options: [
+                    "Sunnah Muakkad",
+                    "Mubah (Boleh dilakukan)",
+                    "Wajib (Fardhu 'Ain)",
+                    "Makruh"
+                ],
+                correct: 2,
+                explanation: "Hukum zakat fitrah adalah wajib bagi setiap muslim, laki-laki maupun perempuan, besar maupun kecil, yang menjumpai bulan Ramadan dan memiliki kelebihan rezeki."
+            },
+            {
+                question: "Kapankah batas WAKTU UTAMA / WAJIB menunaikan zakat fitrah?",
+                options: [
+                    "Saat awal bulan Ramadan",
+                    "Terbenam matahari akhir Ramadan hingga sebelum sholat Idul Fitri",
+                    "Setelah selesai menunaikan Sholat Idul Fitri",
+                    "Bebas kapan saja di bulan Dzulhijjah"
+                ],
+                correct: 1,
+                explanation: "Waktu wajib zakat fitrah dimulai sejak terbenamnya matahari di penghujung Ramadan sampai sebelum Sholat Idul Fitri dilaksanakan."
+            },
+            {
+                question: "Berapakah kadar jumlah zakat fitrah bahan makanan pokok (beras) per orang?",
+                options: [
+                    "1,5 kg atau 2 liter",
+                    "2,5 kg atau 3,5 liter",
+                    "5,0 kg atau 7 liter",
+                    "10 kg per keluarga"
+                ],
+                correct: 1,
+                explanation: "Kadar zakat fitrah yang wajib dikeluarkan per orang adalah 2,5 kg atau setara 3,5 liter bahan makanan pokok (beras)."
+            }
+        ];
+
+        // Asnaf Drag and Drop Items Data (Babak 3)
+        const asnafItemsData = [
+            { id: 'a1', name: 'Fakir', isAsnaf: true, desc: 'Hampir tidak punya harta & penghasilan' },
+            { id: 'a2', name: 'Miskin', isAsnaf: true, desc: 'Punya penghasilan tapi kurang untuk kebutuhan' },
+            { id: 'a3', name: 'Amil Zakat', isAsnaf: true, desc: 'Petugas resmi pengelola & penyalur zakat' },
+            { id: 'a4', name: 'Muallaf', isAsnaf: true, desc: 'Orang yang baru masuk Islam' },
+            { id: 'a5', name: 'Riqab', isAsnaf: true, desc: 'Hamba sahaya / memerdekakan budak' },
+            { id: 'a6', name: 'Gharimin', isAsnaf: true, desc: 'Orang yang memiliki hutang untuk kebaikan' },
+            { id: 'a7', name: 'Fisabilillah', isAsnaf: true, desc: 'Orang yang berjuang di jalan Allah' },
+            { id: 'a8', name: 'Ibnu Sabil', isAsnaf: true, desc: 'Musafir yang kehabisan bekal perjalanan' },
+            // Impostors (Non-Asnaf)
+            { id: 'n1', name: 'Orang Kaya Raya', isAsnaf: false, desc: 'Memiliki harta dan penghasilan sangat cukup' },
+            { id: 'n2', name: 'Pejabat Negeri', isAsnaf: false, desc: 'Mampu secara finansial & punya kedudukan' },
+            { id: 'n3', name: 'Pedagang Sukses', isAsnaf: false, desc: 'Memiliki keuntungan usaha berlimpah' }
+        ];
+
+        /* ===================================================
+           3. UI CONTROLLER & RENDERING
+           =================================================== */
+        
+        function updateHeader() {
+            document.getElementById('scoreText').innerText = gameState.score;
+            const levelBadge = document.getElementById('levelBadge');
+            const progressBar = document.getElementById('progressBar');
+
+            if (gameState.currentRound === 0) {
+                levelBadge.innerText = "Info";
+                progressBar.style.width = "5%";
+            } else if (gameState.currentRound === 1) {
+                levelBadge.innerText = "1/3";
+                const p = 10 + (gameState.quizIndex / quizData.length) * 25;
+                progressBar.style.width = `${p}%`;
+            } else if (gameState.currentRound === 2) {
+                levelBadge.innerText = "2/3";
+                const p = 35 + (gameState.riceSimulatedCount / 3) * 30;
+                progressBar.style.width = `${p}%`;
+            } else if (gameState.currentRound === 3) {
+                levelBadge.innerText = "3/3";
+                const p = 65 + (gameState.sortedAsnafCount / gameState.targetAsnafCount) * 30;
+                progressBar.style.width = `${p}%`;
+            } else {
+                levelBadge.innerText = "Selesai";
+                progressBar.style.width = "100%";
+            }
+        }
+
+        // --- SCREEN 0: WELCOME INTRO ---
+        function renderIntroScreen() {
+            gameState.currentRound = 0;
+            updateHeader();
+
+            const card = document.getElementById('gameCard');
+            card.innerHTML = `
+                <div class="flex flex-col items-center text-center space-y-6 py-4 my-auto">
+                    <!-- Mosque / Islamic Illustration Hero -->
+                    <div class="relative">
+                        <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white text-5xl shadow-xl shadow-emerald-500/30 animate-float">
+                            <i class="fas fa-hand-holding-heart"></i>
+                        </div>
+                        <div class="absolute -bottom-2 -right-2 bg-amber-400 text-amber-900 text-xs font-extrabold px-2.5 py-1 rounded-full shadow">
+                            Kelas 5 PAI
+                        </div>
+                    </div>
+
+                    <div class="max-w-xl">
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight mb-2">
+                            Misi Zakat Fitrah:<br><span class="text-emerald-600">Hidup Lapang dengan Berbagi</span>
+                        </h2>
+                        <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                            Bantu Panitia Amil Zakat mengelola penyerahan beras dan menyalurkannya kepada 8 golongan Asnaf yang berhak! Siapkan pengetahuanmu dalam 3 babak seru.
+                        </p>
+                    </div>
+
+                    <!-- Round Previews Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-2xl text-left my-2">
+                        <div class="bg-emerald-50/80 border border-emerald-100 p-3.5 rounded-2xl flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold">1</div>
+                            <div>
+                                <h4 class="text-xs font-bold text-emerald-900">Babak 1</h4>
+                                <p class="text-[11px] text-emerald-700">Kuis Hukum & Waktu</p>
+                            </div>
+                        </div>
+                        <div class="bg-amber-50/80 border border-amber-100 p-3.5 rounded-2xl flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold">2</div>
+                            <div>
+                                <h4 class="text-xs font-bold text-amber-900">Babak 2</h4>
+                                <p class="text-[11px] text-amber-700">Kalkulator Amil Zakat</p>
+                            </div>
+                        </div>
+                        <div class="bg-teal-50/80 border border-teal-100 p-3.5 rounded-2xl flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-teal-500 text-white flex items-center justify-center font-bold">3</div>
+                            <div>
+                                <h4 class="text-xs font-bold text-teal-900">Babak 3</h4>
+                                <p class="text-[11px] text-teal-700">Sortir 8 Asnaf</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Start Button -->
+                    <button onclick="startGame()" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-lg font-bold rounded-2xl shadow-lg shadow-emerald-600/30 transform transition active:scale-95 flex items-center justify-center gap-3">
+                        <span>Mulai Permainan</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            `;
+        }
+
+        function startGame() {
+            sfx.playClick();
+            gameState.score = 0;
+            gameState.quizIndex = 0;
+            renderBabak1();
+        }
+
+        /* ===================================================
+           4. BABAK 1: KUIS PEMAHAMAN & HUKUM
+           =================================================== */
+        function renderBabak1() {
+            gameState.currentRound = 1;
+            updateHeader();
+
+            const currentQ = quizData[gameState.quizIndex];
+            const card = document.getElementById('gameCard');
+
+            card.innerHTML = `
+                <div class="flex flex-col justify-between h-full space-y-6">
+                    <!-- Top Question Info Header -->
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                                <i class="fas fa-question-circle"></i> Soal ${gameState.quizIndex + 1} dari ${quizData.length}
+                            </span>
+                            <span class="text-xs font-semibold text-slate-400">Babak 1: Kuis Pemahaman</span>
+                        </div>
+                        <h3 class="text-lg sm:text-xl font-bold text-slate-800 leading-snug">
+                            ${currentQ.question}
+                        </h3>
+                    </div>
+
+                    <!-- Options Grid -->
+                    <div id="quizOptionsContainer" class="grid grid-cols-1 gap-3 my-auto">
+                        ${currentQ.options.map((opt, idx) => `
+                            <button onclick="handleQuizAnswer(${idx})" class="quiz-btn text-left p-4 rounded-xl border-2 border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all font-semibold text-slate-700 flex items-center justify-between group active:scale-[0.99]">
+                                <span class="flex items-center gap-3">
+                                    <span class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 font-bold flex items-center justify-center text-xs group-hover:bg-emerald-500 group-hover:text-white transition">
+                                        ${String.fromCharCode(65 + idx)}
+                                    </span>
+                                    <span class="text-sm sm:text-base">${opt}</span>
+                                </span>
+                                <i class="fas fa-chevron-right text-slate-300 group-hover:text-emerald-500 transition"></i>
+                            </button>
+                        `).join('')}
+                    </div>
+
+                    <!-- Explanation Feedback Area -->
+                    <div id="quizFeedback" class="hidden p-4 rounded-xl text-sm font-medium leading-relaxed transition-all"></div>
+
+                    <!-- Footer Action Button -->
+                    <div class="flex justify-end pt-2">
+                        <button id="nextQuizBtn" onclick="nextQuizQuestion()" class="hidden px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition flex items-center gap-2">
+                            <span>Soal Berikutnya</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function handleQuizAnswer(selectedIdx) {
+            const currentQ = quizData[gameState.quizIndex];
+            const buttons = document.querySelectorAll('.quiz-btn');
+            const feedbackEl = document.getElementById('quizFeedback');
+            const nextBtn = document.getElementById('nextQuizBtn');
+
+            // Disable further clicks
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (selectedIdx === currentQ.correct) {
+                sfx.playCorrect();
+                gameState.score += 25;
+                updateHeader();
+
+                buttons[selectedIdx].classList.remove('border-slate-200', 'hover:border-emerald-500');
+                buttons[selectedIdx].classList.add('border-emerald-500', 'bg-emerald-100/80', 'text-emerald-900');
+                
+                feedbackEl.className = "p-4 rounded-xl text-sm font-medium leading-relaxed bg-emerald-50 border border-emerald-200 text-emerald-900 flex items-start gap-3";
+                feedbackEl.innerHTML = `
+                    <i class="fas fa-check-circle text-emerald-600 text-lg mt-0.5"></i>
+                    <div>
+                        <p class="font-bold mb-1 text-emerald-800">Jawaban Tepat! (+25 Skor)</p>
+                        <p class="text-xs sm:text-sm text-emerald-700">${currentQ.explanation}</p>
+                    </div>
+                `;
+            } else {
+                sfx.playWrong();
+
+                buttons[selectedIdx].classList.remove('border-slate-200');
+                buttons[selectedIdx].classList.add('border-rose-400', 'bg-rose-50', 'text-rose-900');
+
+                // Highlight correct one
+                buttons[currentQ.correct].classList.remove('border-slate-200');
+                buttons[currentQ.correct].classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-900');
+
+                feedbackEl.className = "p-4 rounded-xl text-sm font-medium leading-relaxed bg-rose-50 border border-rose-200 text-rose-900 flex items-start gap-3";
+                feedbackEl.innerHTML = `
+                    <i class="fas fa-times-circle text-rose-600 text-lg mt-0.5"></i>
+                    <div>
+                        <p class="font-bold mb-1 text-rose-800">Jawaban Kurang Tepat</p>
+                        <p class="text-xs sm:text-sm text-rose-700">${currentQ.explanation}</p>
+                    </div>
+                `;
+            }
+
+            feedbackEl.classList.remove('hidden');
+            nextBtn.classList.remove('hidden');
+        }
+
+        function nextQuizQuestion() {
+            sfx.playClick();
+            gameState.quizIndex++;
+            if (gameState.quizIndex < quizData.length) {
+                renderBabak1();
+            } else {
+                // Move to Babak 2
+                gameState.riceSimulatedCount = 0;
+                renderBabak2Intro();
+            }
+        }
+
+        /* ===================================================
+           5. BABAK 2: KALKULATOR SIMULASI BERAS PANITIA ZAKAT
+           =================================================== */
+        function renderBabak2Intro() {
+            gameState.currentRound = 2;
+            updateHeader();
+
+            const card = document.getElementById('gameCard');
+            card.innerHTML = `
+                <div class="flex flex-col items-center text-center space-y-6 my-auto py-4">
+                    <div class="w-20 h-20 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-4xl shadow-lg shadow-amber-500/30">
+                        <i class="fas fa-scale-balanced"></i>
+                    </div>
+
+                    <div class="max-w-md">
+                        <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 mb-2">Babak 2</span>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Kalkulator Amil Zakat</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Kamu sekarang bertugas sebagai **Amil Zakat** di meja penerimaan masjid! Keluarga muzakki akan datang untuk membayar zakat fitrah. Hitung dan timbang beras mereka dengan tepat.
+                        </p>
+                    </div>
+
+                    <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl text-left text-xs sm:text-sm text-amber-900 max-w-md space-y-1">
+                        <p class="font-bold flex items-center gap-2">
+                            <i class="fas fa-info-circle text-amber-600"></i> Rumus Zakat Fitrah:
+                        </p>
+                        <p>• Satuan Kilogram (Kg): <b>2,5 kg</b> per orang</p>
+                        <p>• Satuan Liter: <b>3,5 liter</b> per orang</p>
+                    </div>
+
+                    <button onclick="startBabak2Simulation()" class="px-8 py-3.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-md transition transform active:scale-95 flex items-center gap-2">
+                        <span>Mulai Menimbang</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            `;
+        }
+
+        function generateRandomFamily() {
+            const familyNames = ['Keluarga Pak Ahmad', 'Keluarga Bu Fatimah', 'Keluarga Pak Budi', 'Keluarga Pak Hasan'];
+            const randomName = familyNames[Math.floor(Math.random() * familyNames.length)];
+            
+            const adults = Math.floor(Math.random() * 2) + 1; // 1-2
+            const children = Math.floor(Math.random() * 3); // 0-2
+            const totalMembers = adults + children;
+
+            return {
+                name: randomName,
+                adults: adults,
+                children: children,
+                totalMembers: totalMembers
+            };
+        }
+
+        function startBabak2Simulation() {
+            sfx.playClick();
+            gameState.currentFamily = generateRandomFamily();
+            gameState.unitType = Math.random() > 0.5 ? 'kg' : 'liter';
+            renderBabak2Calculator();
+        }
+
+        function renderBabak2Calculator() {
+            const family = gameState.currentFamily;
+            const unit = gameState.unitType;
+            const card = document.getElementById('gameCard');
+
+            const ratePerPerson = unit === 'kg' ? 2.5 : 3.5;
+            const correctTotal = family.totalMembers * ratePerPerson;
+
+            card.innerHTML = `
+                <div class="flex flex-col justify-between h-full space-y-4">
+                    <!-- Header simulation -->
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                        <div>
+                            <span class="text-xs font-bold text-amber-600 uppercase tracking-wider">Simulasi Amil Zakat (${gameState.riceSimulatedCount + 1}/3)</span>
+                            <h3 class="text-lg font-bold text-slate-800">${family.name}</h3>
+                        </div>
+                        <span class="bg-amber-100 text-amber-800 font-extrabold text-xs px-3 py-1.5 rounded-xl border border-amber-200">
+                            Satuan: ${unit.toUpperCase()}
+                        </span>
+                    </div>
+
+                    <!-- Family Details & Illustration -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center my-auto">
+                        <!-- Visitor Info Box -->
+                        <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex flex-col items-center text-center space-y-3">
+                            <div class="flex -space-x-2 overflow-hidden py-1">
+                                ${Array(family.adults).fill(0).map(() => `
+                                    <div class="inline-block h-10 w-10 rounded-full ring-2 ring-white bg-emerald-500 text-white flex items-center justify-center font-bold text-xs">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                `).join('')}
+                                ${Array(family.children).fill(0).map(() => `
+                                    <div class="inline-block h-8 w-8 rounded-full ring-2 ring-white bg-teal-400 text-white flex items-center justify-center font-bold text-xs my-auto">
+                                        <i class="fas fa-child"></i>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-500 font-medium">Jumlah Anggota Keluarga:</p>
+                                <p class="text-base font-extrabold text-slate-800">
+                                    ${family.adults} Dewasa ${family.children > 0 ? '+ ' + family.children + ' Anak' : ''} 
+                                    = <span class="text-emerald-600">${family.totalMembers} Orang</span>
+                                </p>
+                            </div>
+                            <div class="text-xs text-amber-800 bg-amber-50 p-2 rounded-xl border border-amber-200/60 w-full">
+                                Ketentuan: <b>${ratePerPerson} ${unit}</b> per orang
+                            </div>
+                        </div>
+
+                        <!-- Scale Interactive Weighing Tool -->
+                        <div class="bg-gradient-to-b from-amber-500/10 to-emerald-500/10 border border-emerald-200/80 p-5 rounded-2xl flex flex-col items-center text-center space-y-3">
+                            <div class="text-4xl text-amber-600 animate-float">
+                                <i class="fas fa-box-tissue"></i>
+                            </div>
+                            <label for="riceInput" class="text-xs font-bold text-slate-700">
+                                Masukkan Total Beras yang Diterima (${unit}):
+                            </label>
+                            
+                            <div class="flex items-center gap-2">
+                                <input type="number" id="riceInput" step="0.1" min="0" placeholder="0.0" 
+                                    class="w-32 text-center text-xl font-extrabold p-2.5 rounded-xl border-2 border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
+                                <span class="font-bold text-slate-600">${unit}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Feedback Message -->
+                    <div id="simFeedback" class="hidden p-3 rounded-xl text-xs sm:text-sm font-medium"></div>
+
+                    <!-- Action Button -->
+                    <div class="flex justify-end pt-2">
+                        <button id="verifyRiceBtn" onclick="verifyRiceSimulation(${correctTotal})" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition flex items-center gap-2">
+                            <i class="fas fa-check"></i>
+                            <span>Timbang & Verifikasi</span>
+                        </button>
+                        <button id="nextSimBtn" onclick="nextRiceSimulation()" class="hidden px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-md transition flex items-center gap-2">
+                            <span>Lanjut Muzakki Berikutnya</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function verifyRiceSimulation(correctTotal) {
+            const inputEl = document.getElementById('riceInput');
+            const userVal = parseFloat(inputEl.value);
+            const feedbackEl = document.getElementById('simFeedback');
+            const verifyBtn = document.getElementById('verifyRiceBtn');
+            const nextBtn = document.getElementById('nextSimBtn');
+
+            if (isNaN(userVal) || userVal <= 0) {
+                alert("Masukkan angka jumlah beras terlebih dahulu!");
+                return;
+            }
+
+            // Margin of error allowance for decimals
+            if (Math.abs(userVal - correctTotal) < 0.05) {
+                sfx.playCorrect();
+                gameState.score += 30;
+                updateHeader();
+
+                feedbackEl.className = "p-3 rounded-xl text-xs sm:text-sm font-semibold bg-emerald-100 border border-emerald-300 text-emerald-900 flex items-center gap-2";
+                feedbackEl.innerHTML = `<i class="fas fa-check-circle text-emerald-600 text-lg"></i> Tepat Sekali! Total beras untuk ${gameState.currentFamily.totalMembers} orang adalah ${correctTotal} ${gameState.unitType}. (+30 Skor)`;
+                
+                verifyBtn.classList.add('hidden');
+                nextBtn.classList.remove('hidden');
+            } else {
+                sfx.playWrong();
+                feedbackEl.className = "p-3 rounded-xl text-xs sm:text-sm font-semibold bg-rose-100 border border-rose-300 text-rose-900 flex items-center gap-2";
+                feedbackEl.innerHTML = `<i class="fas fa-times-circle text-rose-600 text-lg"></i> Kurang tepat! Coba kalikan ${gameState.currentFamily.totalMembers} orang × ${gameState.unitType === 'kg' ? '2,5 kg' : '3,5 liter'}.`;
+            }
+
+            feedbackEl.classList.remove('hidden');
+        }
+
+        function nextRiceSimulation() {
+            sfx.playClick();
+            gameState.riceSimulatedCount++;
+
+            if (gameState.riceSimulatedCount < 3) {
+                gameState.currentFamily = generateRandomFamily();
+                gameState.unitType = Math.random() > 0.5 ? 'kg' : 'liter';
+                renderBabak2Calculator();
+            } else {
+                // Move to Babak 3 Intro
+                renderBabak3Intro();
+            }
+        }
+
+        /* ===================================================
+           6. BABAK 3: SORTIR 8 ASNAF (DRAG & DROP / CLICK)
+           =================================================== */
+        function renderBabak3Intro() {
+            gameState.currentRound = 3;
+            updateHeader();
+
+            const card = document.getElementById('gameCard');
+            card.innerHTML = `
+                <div class="flex flex-col items-center text-center space-y-6 my-auto py-4">
+                    <div class="w-20 h-20 rounded-2xl bg-teal-500 text-white flex items-center justify-center text-4xl shadow-lg shadow-teal-500/30">
+                        <i class="fas fa-users-viewfinder"></i>
+                    </div>
+
+                    <div class="max-w-md">
+                        <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-teal-100 text-teal-800 mb-2">Babak 3</span>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Sortir 8 Asnaf Penerima Zakat</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Beras zakat sudah terkumpul di masjid! Sekarang bantu Amil Zakat menyalurkan kantong zakat hanya kepada **8 Golongan Asnaf** yang berhak menerima.
+                        </p>
+                    </div>
+
+                    <div class="bg-teal-50 border border-teal-200 p-3.5 rounded-2xl text-xs text-teal-900 max-w-md text-left">
+                        <p class="font-bold mb-1">🎮 Cara Bermain:</p>
+                        <p>Klik atau Seret (Drag) kartu golongan ke dalam **Lumbung Zakat Fitrah**. Hati-hati, jangan memilih golongan yang tidak berhak!</p>
+                    </div>
+
+                    <button onclick="startBabak3Sorting()" class="px-8 py-3.5 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow-md transition transform active:scale-95 flex items-center gap-2">
+                        <span>Mulai Menyortir</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            `;
+        }
+
+        function startBabak3Sorting() {
+            sfx.playClick();
+            gameState.sortedAsnafCount = 0;
+            // Shuffle items
+            const shuffledItems = [...asnafItemsData].sort(() => Math.random() - 0.5);
+            renderBabak3Board(shuffledItems);
+        }
+
+        function renderBabak3Board(items) {
+            const card = document.getElementById('gameCard');
+
+            card.innerHTML = `
+                <div class="flex flex-col justify-between h-full space-y-4">
+                    <!-- Header level 3 -->
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                        <div>
+                            <span class="text-xs font-bold text-teal-600 uppercase tracking-wider">Babak 3: Penyaluran Asnaf</span>
+                            <h3 class="text-base sm:text-lg font-bold text-slate-800">Pilih / Seret Golongan Berhak Ke Lumbung</h3>
+                        </div>
+                        <div class="bg-teal-100 text-teal-800 text-xs font-bold px-3 py-1 rounded-lg">
+                            Terkumpul: <span id="asnafCountText">0</span>/8 Asnaf
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start my-auto">
+                        <!-- Source Pool Items -->
+                        <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl max-h-[260px] overflow-y-auto space-y-2">
+                            <p class="text-xs font-bold text-slate-500 mb-2">Daftar Golongan (Klik/Seret ke Lumbung):</p>
+                            <div id="asnafPool" class="grid grid-cols-1 gap-2">
+                                ${items.map(item => `
+                                    <div id="${item.id}" draggable="true" ondragstart="handleDragStart(event, '${item.id}')" onclick="handleAsnafClick('${item.id}')"
+                                        class="draggable-item bg-white border border-slate-200 p-2.5 rounded-xl shadow-sm hover:border-teal-400 flex items-center justify-between">
+                                        <div>
+                                            <p class="text-xs sm:text-sm font-bold text-slate-800">${item.name}</p>
+                                            <p class="text-[11px] text-slate-500">${item.desc}</p>
+                                        </div>
+                                        <i class="fas fa-hand-holding-hand text-slate-300"></i>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <!-- Target Drop Zone (Lumbung Zakat) -->
+                        <div id="dropZone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)"
+                            class="drop-zone border-2 border-dashed border-teal-400 bg-teal-50/50 p-4 rounded-2xl min-h-[240px] flex flex-col items-center justify-center text-center space-y-3 transition">
+                            
+                            <div class="w-16 h-16 rounded-2xl bg-teal-500 text-white flex items-center justify-center text-3xl shadow-md">
+                                <i class="fas fa-wheat-awn"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-teal-900">Lumbung Penerima Zakat Fitrah</h4>
+                                <p class="text-xs text-teal-700 mt-1">Letakkan 8 Golongan Asnaf di sini</p>
+                            </div>
+                            
+                            <!-- Collected Asnaf Tags Inside Zone -->
+                            <div id="collectedTags" class="flex flex-wrap gap-1.5 justify-center w-full pt-2">
+                                <!-- Tags dynamically inserted here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feedback msg -->
+                    <div id="asnafFeedback" class="hidden p-3 rounded-xl text-xs font-medium"></div>
+
+                    <div class="flex justify-end">
+                        <button id="finishGameBtn" onclick="finishGame()" class="hidden px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold rounded-xl shadow-lg transition flex items-center gap-2">
+                            <span>Selesaikan Misi & Lihat Hasil</span>
+                            <i class="fas fa-trophy"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Drag & Drop / Click Logic ---
+        function handleDragStart(ev, id) {
+            ev.dataTransfer.setData("text/plain", id);
+        }
+
+        function handleDragOver(ev) {
+            ev.preventDefault();
+            document.getElementById('dropZone').classList.add('drag-over');
+        }
+
+        function handleDragLeave(ev) {
+            document.getElementById('dropZone').classList.remove('drag-over');
+        }
+
+        function handleDrop(ev) {
+            ev.preventDefault();
+            document.getElementById('dropZone').classList.remove('drag-over');
+            const id = ev.dataTransfer.getData("text/plain");
+            processAsnafSelection(id);
+        }
+
+        function handleAsnafClick(id) {
+            processAsnafSelection(id);
+        }
+
+        function processAsnafSelection(id) {
+            const item = asnafItemsData.find(i => i.id === id);
+            const itemEl = document.getElementById(id);
+            const feedbackEl = document.getElementById('asnafFeedback');
+
+            if (!item || !itemEl) return;
+
+            if (item.isAsnaf) {
+                sfx.playCorrect();
+                gameState.score += 20;
+                gameState.sortedAsnafCount++;
+                updateHeader();
+
+                // Remove item from pool
+                itemEl.remove();
+
+                // Add tag inside drop zone
+                const collectedArea = document.getElementById('collectedTags');
+                const tag = document.createElement('span');
+                tag.className = "bg-teal-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg flex items-center gap-1 shadow-sm animate-bounce";
+                tag.innerHTML = `<i class="fas fa-check text-[10px]"></i> ${item.name}`;
+                collectedArea.appendChild(tag);
+
+                document.getElementById('asnafCountText').innerText = gameState.sortedAsnafCount;
+
+                feedbackEl.className = "p-3 rounded-xl text-xs font-bold bg-emerald-100 border border-emerald-300 text-emerald-900";
+                feedbackEl.innerHTML = `✨ Benar! <b>${item.name}</b> adalah termasuk 8 Asnaf yang berhak menerima zakat. (+20 Skor)`;
+                feedbackEl.classList.remove('hidden');
+
+                if (gameState.sortedAsnafCount >= gameState.targetAsnafCount) {
+                    document.getElementById('finishGameBtn').classList.remove('hidden');
+                }
+            } else {
+                sfx.playWrong();
+                feedbackEl.className = "p-3 rounded-xl text-xs font-bold bg-rose-100 border border-rose-300 text-rose-900";
+                feedbackEl.innerHTML = `❌ Kurang Tepat! <b>${item.name}</b> bukan termasuk golongan Asnaf penerima zakat fitrah.`;
+                feedbackEl.classList.remove('hidden');
+            }
+        }
+
+        /* ===================================================
+           7. FINISH & SUMMARY SCREEN
+           =================================================== */
+        function finishGame() {
+            sfx.playWin();
+            gameState.currentRound = 4;
+            updateHeader();
+
+            // Trigger Confetti Celebration
+            confetti({
+                particleCount: 120,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+
+            const card = document.getElementById('gameCard');
+            card.innerHTML = `
+                <div class="flex flex-col items-center text-center space-y-6 my-auto py-4">
+                    <!-- Medal / Trophy Graphic -->
+                    <div class="relative">
+                        <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-tr from-amber-400 to-amber-600 text-white flex items-center justify-center text-5xl shadow-xl shadow-amber-500/30 animate-bounce">
+                            <i class="fas fa-award"></i>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="inline-block px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-800 mb-2">
+                            🎉 Misi Selesai Dengan Sempurna!
+                        </span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800">
+                            Terima Kasih, Amil Zakat Hebat!
+                        </h2>
+                        <p class="text-slate-600 text-sm mt-1">Kamu telah berhasil menuntaskan seluruh tantangan materi PAI Kelas 5 Bab 4.</p>
+                    </div>
+
+                    <!-- Final Score Card -->
+                    <div class="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 p-4 sm:p-6 rounded-2xl w-full max-w-md text-center">
+                        <p class="text-xs uppercase font-bold text-slate-500 tracking-wider">Total Skor Akhir Kamu</p>
+                        <p class="text-4xl sm:text-5xl font-extrabold text-emerald-600 my-1">${gameState.score}</p>
+                        <p class="text-xs text-emerald-800 font-semibold">Predikat: Amil Zakat Teladan 🌟</p>
+                    </div>
+
+                    <!-- Educational Summary Box (Kurikulum Merdeka PAI Grade 5) -->
+                    <div class="bg-amber-50/90 border border-amber-200 p-4 sm:p-5 rounded-2xl text-left max-w-xl text-xs sm:text-sm text-amber-950 space-y-2">
+                        <h4 class="font-extrabold text-amber-900 flex items-center gap-2 text-sm sm:text-base border-b border-amber-200/80 pb-2">
+                            <i class="fas fa-book-quran text-amber-600"></i> Rangkuman Materi Zakat Fitrah
+                        </h4>
+                        <p>1. <b>Pengertian:</b> Zakat fitrah dikeluarkan untuk membersihkan diri dari dosa serta menyucikan jiwa dan harta.</p>
+                        <p>2. <b>Hukum:</b> Wajib bagi setiap muslim (laki-laki, perempuan, tua, muda) yang mampu dan menjumpai bulan Ramadan.</p>
+                        <p>3. <b>Takaran:</b> 2,5 kg atau 3,5 liter bahan makanan pokok (beras) per jiwa.</p>
+                        <p>4. <b>Waktu Utama:</b> Terbenam matahari akhir Ramadan hingga sebelum Sholat Idul Fitri.</p>
+                        <p>5. <b>8 Asnaf Berhak:</b> Fakir, Miskin, Amil, Muallaf, Riqab, Gharimin, Fisabilillah, dan Ibnu Sabil.</p>
+                        <div class="mt-3 pt-2 border-t border-amber-200/80 text-emerald-900 font-bold italic text-center">
+                            "Dengan membayar zakat fitrah, kita belajar berbagi dan hidup lapang hati. Membantu sesama membuat kehidupan lebih berkah dan penuh kepedulian."
+                        </div>
+                    </div>
+
+                    <!-- Play Again Button -->
+                    <button onclick="startGame()" class="px-8 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-base font-bold rounded-2xl shadow-lg transition transform active:scale-95 flex items-center gap-3">
+                        <i class="fas fa-rotate-right"></i>
+                        <span>Mainkan Lagi</span>
+                    </button>
+                </div>
+            `;
+        }
+
+        // Initialize Game on Load
+        window.onload = function() {
+            renderIntroScreen();
+        };
+    </script>
+</body>
+</html>
